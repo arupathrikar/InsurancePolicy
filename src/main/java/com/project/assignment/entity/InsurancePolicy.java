@@ -1,11 +1,12 @@
 package com.project.assignment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties; // Add this import
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name="insurance_policy")
+@Table(name = "insurance_policy")
 public class InsurancePolicy {
 
     @Id

@@ -1,20 +1,27 @@
 package com.project.assignment.entity;
 
-public class DynamoDbPolicy {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+
+@DynamoDbBean
+@JsonIgnoreProperties(ignoreUnknown = true) // Add this annotation
+public class InsurancePolicyDynamoDb {
 
     private String policyNumber;
     private String policyHolderName;
     private Double policyAmount;
 
-    //constructor
-    public DynamoDbPolicy(String policyNumber, String policyHolderName, Double policyAmount) {
+    // Default constructor required by DynamoDB Enhanced SDK
+    public InsurancePolicyDynamoDb() {}
+
+    public InsurancePolicyDynamoDb(String policyNumber, String policyHolderName, Double policyAmount) {
         this.policyNumber = policyNumber;
         this.policyHolderName = policyHolderName;
         this.policyAmount = policyAmount;
     }
 
-    // Getters and Setters
-
+    @DynamoDbPartitionKey
     public String getPolicyNumber() {
         return policyNumber;
     }
@@ -37,17 +44,5 @@ public class DynamoDbPolicy {
 
     public void setPolicyAmount(Double policyAmount) {
         this.policyAmount = policyAmount;
-    }
-
-
-    //toString
-
-    @Override
-    public String toString() {
-        return "DynamoDbPolicy{" +
-                "policyNumber='" + policyNumber + '\'' +
-                ", policyHolderName='" + policyHolderName + '\'' +
-                ", policyAmount=" + policyAmount +
-                '}';
     }
 }
