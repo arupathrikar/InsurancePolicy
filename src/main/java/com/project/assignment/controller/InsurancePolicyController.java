@@ -38,7 +38,7 @@ public class InsurancePolicyController {
     @PostMapping
     public ResponseEntity<String> createPolicy(@Valid @RequestBody InsurancePolicy policy) {
         service.savePolicy(policy);
-        //awsMessagingService.publishToSns(policy);
+        //snsMessagingService.publishToSns(policy);
         return new ResponseEntity<>("Policy Created and Published to SNS Successfully", HttpStatus.CREATED);
     }
 
@@ -64,6 +64,7 @@ public class InsurancePolicyController {
     public String createPolicy(@RequestParam String topicArn, @RequestBody String policyDetails) {
         try {
             snsMessagingService.publishToSns(topicArn, policyDetails);
+            //snsMessagingService.SendEmail();
             return "Policy created and message sent!";
         } catch (Exception e) {
             return "Error: " + e.getMessage();
@@ -71,13 +72,13 @@ public class InsurancePolicyController {
     }
 
     @PostMapping("/process-sqs")
-    public String processSqsMessages(@RequestBody InsurancePolicyDynamoDb policy) {
-        System.out.println("Received policy: " + policy);
+    public ResponseEntity<String> processSqsMessages() {
         try {
             sqsMessageHandler.processMessages();
-            return "Messages processed and saved to DynamoDB!";
+            return ResponseEntity.ok("SQS messages processed successfully!");
         } catch (Exception e) {
-            return "Error occurred while processing SQS messages: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error occurred while processing SQS messages: " + e.getMessage());
         }
     }
 
